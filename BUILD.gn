@@ -2,6 +2,16 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+config("dash_config") {
+  cflags = [
+    "-Wno-format-security",
+    "-Wno-gnu-designator",
+    "-Wno-string-plus-int",
+    "-Wno-sign-compare",
+    "-Wno-logical-not-parentheses",
+  ]
+}
+
 executable("dash") {
   sources = [
     "src/alias.c",
@@ -25,8 +35,6 @@ executable("dash") {
     "src/exec.h",
     "src/expand.c",
     "src/expand.h",
-    "src/hetio.c",
-    "src/hetio.h",
     "src/histedit.c",
     "src/init.c",
     "src/init.h",
@@ -73,12 +81,18 @@ executable("dash") {
   ]
 
   defines = [
+    "_GNU_SOURCE",
     "BSD",
-    "SHELL",
     "IFS_BROKEN",
+    "SHELL",
+    "SMALL",
   ]
 
-  cflags_c = [
+  configs += [
+    ":dash_config",
+  ]
+
+  cflags = [
     "-include", rebase_path("config.h", root_build_dir)
   ]
 

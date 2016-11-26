@@ -5,7 +5,6 @@
 #include "shell.h"
 #include "builtins.h"
 
-int histcmd(int, char **);
 int breakcmd(int, char **);
 int cdcmd(int, char **);
 int commandcmd(int, char **);
@@ -54,7 +53,6 @@ const struct builtincmd builtincmd[] = {
 	{ "exit", exitcmd, 3 },
 	{ "export", exportcmd, 7 },
 	{ "false", falsecmd, 2 },
-	{ "fc", histcmd, 2 },
 	{ "getopts", getoptscmd, 2 },
 	{ "hash", hashcmd, 0 },
 	{ "jobs", jobscmd, 2 },

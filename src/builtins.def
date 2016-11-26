@@ -6,8 +6,6 @@
 # 1 "<built-in>" 2
 # 1 "builtins.def.in" 2
 # 58 "builtins.def.in"
-histcmd -u fc
-
 
 breakcmd -s break -s continue
 cdcmd -u cd chdir
