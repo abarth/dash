@@ -84,6 +84,7 @@ executable("dash") {
     "_GNU_SOURCE",
     "BSD",
     "IFS_BROKEN",
+    "JOBS=0",
     "SHELL",
     "SMALL",
   ]
