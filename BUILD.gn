@@ -100,4 +100,9 @@ executable("dash") {
   include_dirs = [
     "src",
   ]
+
+  libs = [
+    "launchpad",
+    "magenta",
+  ]
 }

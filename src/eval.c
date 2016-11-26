@@ -32,6 +32,9 @@
  * SUCH DAMAGE.
  */
 
+#include <launchpad/launchpad.h>
+#include <magenta/syscalls.h>
+#include <magenta/syscalls/object.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
@@ -681,7 +684,6 @@ evalcommand(union node *cmd, int flags)
 	int pip[2];
 #endif
 	struct cmdentry cmdentry;
-	struct job *jp;
 	char *lastarg;
 	const char *path;
 	int spclbltin;
@@ -825,22 +827,33 @@ bail:
 
 	/* Execute the command. */
 	switch (cmdentry.cmdtype) {
-	default:
-		/* Fork off a child process if necessary. */
-		if (!(flags & EV_EXIT) || have_traps()) {
-			INTOFF;
-			jp = makejob(cmd, 1);
-			if (forkshell(jp, cmd, FORK_FG) != 0) {
-				exitstatus = waitforjob(jp);
-				INTON;
-				break;
-			}
-			FORCEINTON;
-		}
-		listsetvar(varlist.list, VEXPORT|VSTACK);
-		shellexec(argv, path, cmdentry.u.index);
-		/* NOTREACHED */
+	default: {
+		mx_handle_t process = launchpad_launch_mxio(argv[0], argc, (const char* const*)argv);
 
+		if (process < 0) {
+			sh_error("Cannot create child process");
+			exitstatus = process;
+			break;
+		}
+
+		mx_status_t status = mx_handle_wait_one(process, MX_TASK_TERMINATED, MX_TIME_INFINITE, NULL);
+		if (status < 0) {
+			sh_error("Cannot wait for child process");
+			exitstatus = status;
+			break;
+		}
+
+		mx_info_process_t proc_info;
+		status = mx_object_get_info(process, MX_INFO_PROCESS, &proc_info, sizeof(proc_info), NULL, NULL);
+		if (status < 0) {
+			sh_error("Cannot get return code for child process");
+			exitstatus = status;
+			break;
+		}
+
+		exitstatus = proc_info.return_code;
+		break;
+	}
 	case CMDBUILTIN:
 		if (spclbltin > 0 || argc == 0) {
 			poplocalvars(1);
