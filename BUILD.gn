@@ -78,6 +78,10 @@ executable("dash") {
     "IFS_BROKEN",
   ]
 
+  cflags_c = [
+    "-include", rebase_path("config.h", root_build_dir)
+  ]
+
   include_dirs = [
     "src",
   ]
