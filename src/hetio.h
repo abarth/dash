@@ -18,5 +18,3 @@
 void hetio_init(void);
 int hetio_read_input(int fd);
 void hetio_reset_term(void);
-
-extern int hetio_inter;

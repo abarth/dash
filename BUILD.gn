@@ -35,6 +35,8 @@ executable("dash") {
     "src/exec.h",
     "src/expand.c",
     "src/expand.h",
+    "src/hetio.c",
+    "src/hetio.h",
     "src/histedit.c",
     "src/init.c",
     "src/init.h",
@@ -87,6 +89,7 @@ executable("dash") {
     "JOBS=0",
     "SHELL",
     "SMALL",
+    "HETIO",
   ]
 
   configs += [
