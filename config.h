@@ -92,7 +92,7 @@
 #define HAVE_UNISTD_H 1
 
 /* Define to printf format string for intmax_t */
-#define PRIdMAX 1
+/* #undef PRIdMAX */
 
 /* The size of `intmax_t', as computed by sizeof. */
 #define SIZEOF_INTMAX_T 1
